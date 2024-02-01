@@ -27,11 +27,11 @@ export default function SignUp() {
       <h2 className='text-2xl text-center my-3 font-bold'>Sign Up</h2>
       <div className='flex md:flex-wrap justify-center px-6 py-12 max-w-6xl mx-auto
                      space-x-5'>
-        <div className='mb-12 md:mb-6 w-2/5 '>
+        <div className='mb-12 md:mb-6 md:w-[55%] lg:w-[40%]'>
           <img src={signInImage} alt=''
             className='w-full rounded-2xl'/>
         </div>
-        <div className='w-2/5'>
+        <div className='md:w-[55%] lg:w-[40%]'>
           <form >
 
           <input className='w-full p-2 mb-6 border-2 border-gray-500 rounded-md text-gray-700
