@@ -3,9 +3,17 @@ import signInImage from '../assets/signInImage.jpg'
 import { IoIosEye , IoIosEyeOff} from "react-icons/io";
 import { Link } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import { useNavigate } from 'react-router-dom';
+import {toast} from 'react-toastify'
+
+import {serverTimestamp, doc, setDoc} from 'firebase/firestore'
+import {createUserWithEmailAndPassword , updateProfile} from 'firebase/auth'
+import {auth, db} from '../firebase.js'
+
 
 
 export default function SignUp() {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword]= useState(false)
 
   const [formData, setFormData] = useState({
@@ -22,6 +30,34 @@ export default function SignUp() {
     } ))
   }
 
+  function onSubmit(e){
+    e.preventDefault()
+
+    
+    createUserWithEmailAndPassword(auth, email, password)
+    .then(async (userCredential) => {
+      // Signed up 
+      const user = userCredential.user;
+      updateProfile(auth.currentUser, {
+        displayName: name
+      })
+
+      const formCopy = {...formData}
+      delete formCopy.password
+      formCopy.timestamp = serverTimestamp()
+      // Add a new document in collection "users"
+      await setDoc(doc(db, "users", user.uid), formCopy);
+      toast.success('Registration successful')
+      navigate('/')
+    })
+    .catch((error) => {
+      console.log(error.message)
+      const message =error.message
+      const messageArray = message.split('/');
+      toast.error('Registration unsuccessful: (' + messageArray[1])
+    });
+  }
+
   return (
     <div>
       <h2 className='text-2xl text-center my-3 font-bold'>Sign Up</h2>
@@ -32,7 +68,8 @@ export default function SignUp() {
             className='w-full rounded-2xl'/>
         </div>
         <div className='md:w-[55%] lg:w-[40%]'>
-          <form >
+
+          <form onSubmit={onSubmit}>
 
           <input className='w-full p-2 mb-6 border-2 border-gray-500 rounded-md text-gray-700
                          focus:outline-green-700 transition ease-in-out duration-200' 
@@ -80,7 +117,7 @@ export default function SignUp() {
            <button type='submit'
               className='w-full bg-green-700 text-white uppercase rounded mb-6 px-10
                 py-4 shadow-md hover:bg-green-600 hover:shadow-lg transition duration-150 
-                ease-in-out active:bg-green-800 hover:scale-105'>Sign In
+                ease-in-out active:bg-green-800 hover:scale-105'>Register
            </button>
 
            <div className='my-4 flex items-center  before:flex-1 before:border-t before:border-gray-500

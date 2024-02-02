@@ -1,0 +1,64 @@
+1. Create a new project in firebase
+ -> project name: real-state-react-firebase
+
+ 2. Register the web app (that means adding app to the firebase project)
+ -> App nickname: real-state-react-firebase
+ -> uncheck firebase hosting
+
+ 3. Add firebase SDK in the client app
+ -> npm install firebase
+ -> make a new file firebase.js in the src folder and paste the 
+    firebase configuration code of the web app into it
+ -> import required functions from the installed firebase SDK
+    import {getFirestore } from 'firebase/firestore'
+ -> initialize the function to use the service and export it
+    const db = getFirestore()
+    export {db}
+
+ 4. Fom the firebase console, from Build, initialize required services
+ -> initialize firebase authentication, select providers
+    Email/Password
+    Google
+
+    While selecting Google as a provider choose
+    public-facing name: real-state-react-firebase
+    Support email: YOUR EMAIL
+    And that is it.
+
+ -> initialize firestore database
+    leave default name
+    start in production mode
+    Add rules for your database storage and click publish
+
+ -> initialize Storage
+    click production mode
+    Add rules for the storage and click publish      
+
+5. How to use services?
+ ->In firabase.js
+   import { getFirestore } from 'firebase/firestore'    
+   const db = getFirestore()
+   export {db}
+ ->In SignUpPage.jsx
+   import {db} from 'firabase.js'
+   import {getAuth ,createUserWithEmailAndPassword} from "firebase/auth";
+    ...
+    function onSubmit(e){
+        e.preventDefault()
+
+        const auth = getAuth();
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+        // Signed up 
+        const user = userCredential.user;
+        console.log(user)
+        // ...
+        })
+        .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage)
+        // ..
+        });
+    }
+  
