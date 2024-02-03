@@ -1,11 +1,16 @@
 import { useState } from 'react'
 import signInImage from '../assets/signInImage.jpg'
 import { IoIosEye , IoIosEyeOff} from "react-icons/io";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import {toast} from 'react-toastify'
+
+import { auth } from '../firebase.js';
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 
 export default function SignIn() {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword]= useState(false)
 
   const [formData, setFormData] = useState({
@@ -21,6 +26,28 @@ export default function SignIn() {
     } ))
   }
 
+  function onSubmitSignIn(e) {
+    e.preventDefault()
+    
+    console.log('Signing in')
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          console.log(user)
+          toast.success("Sign in successful")
+          navigate('/')
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const message =error.message
+          console.log(message)
+          const messageArray = message.split('/');
+          toast.error('Registration unsuccessful: (' + messageArray[1])
+        });
+  }
+
   return (
     <div>
       <h2 className='text-2xl text-center my-3 font-bold'>Sign In</h2>
@@ -31,7 +58,7 @@ export default function SignIn() {
             className='w-full rounded-2xl'/>
         </div>
         <div className='w-full  md:w-[55%] lg:w-[40%]'>
-          <form >
+          <form onSubmit={onSubmitSignIn}>
 
            <input className='w-full p-2 mb-6 border-2 border-gray-500 rounded-md text-gray-700
                          focus:outline-green-700 transition ease-in-out duration-200' 
