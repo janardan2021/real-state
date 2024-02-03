@@ -3,6 +3,10 @@ import signInImage from '../assets/signInImage.jpg'
 import { Link } from 'react-router-dom';
 import OAuth from '../components/OAuth';
 
+import {auth} from '../firebase.js'
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { toast } from 'react-toastify';
+
 
 export default function ForgotPassword() {
 
@@ -10,6 +14,24 @@ export default function ForgotPassword() {
  
   function onChange(e){
     setEmail(e.target.value)
+  }
+
+  function onSubmit(e) {
+    e.preventDefault()
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        toast.success('Email sent to reset password')
+        // Password reset email sent!
+        // ..
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const message =error.message
+        console.log(message)
+        const messageArray = message.split('/');
+        toast.error('Reset failed: (' + messageArray[1])
+      // ..
+      });
   }
 
   return (
@@ -22,7 +44,7 @@ export default function ForgotPassword() {
             className='w-full rounded-2xl'/>
         </div>
         <div className='md:w-[55%] lg:w-[40%]'>
-          <form >
+          <form onSubmit={onSubmit}>
 
            <input className='w-full p-2 mb-6 border-2 border-gray-500 rounded-md text-gray-700
                          focus:outline-green-700 transition ease-in-out duration-200' 
