@@ -19,12 +19,16 @@ import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 
+import PrivateRoute from './components/PrivateRoute.jsx';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index={true} element={<Home />} />
       <Route path='home' element={<Home />} />
-      <Route path="profile" element={<Profile />} />
+      <Route path='profile' element={<PrivateRoute />}>
+         <Route path="/profile" element={<Profile />} />
+      </Route>
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
       <Route path="offers" element={<Offers />} />
