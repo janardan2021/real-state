@@ -33,7 +33,7 @@ const router = createBrowserRouter(
       <Route path="sign-up" element={<SignUp />} />
       <Route path="offers" element={<Offers />} />
       <Route path="forgot-password" element={<ForgotPassword />} />
-      
+      <Route path='*' element={<Home />} />
     </Route>
   )
 );

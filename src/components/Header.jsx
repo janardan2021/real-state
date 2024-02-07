@@ -1,14 +1,31 @@
+import { getAuth, onAuthStateChanged } from "firebase/auth"
+
+import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router"
 
 export default function Header() {
+    const [pageState, setPageState] = useState('Sign In')
+    
     const navigate = useNavigate()
     const location = useLocation()
     // console.log(location.pathname)
+
+    const auth = getAuth()
     function pathMatchRoute(route){
         if (route === location.pathname) {
             return true
         }
     }
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if(user) {
+                setPageState('Profile')
+            } else {
+                setPageState('Sign In')
+            }
+        })
+    } ,[auth, onAuthStateChanged])
    
   return (
     <div className='bg-gradient-to-r from-white via-green-200
@@ -25,8 +42,10 @@ export default function Header() {
                      ${pathMatchRoute("/") ? "text-black border-b-green-700 border-b-[3px]" : 'text-gray-400' }`}>Home</li>
                     <li onClick={() => navigate('/offers')} className={`py-3 text-sm font-semibold cursor-pointer
                      ${pathMatchRoute("/offers") ? "text-black border-b-green-700 border-b-[3px]" : 'text-gray-400'}`}>Offers</li>
-                    <li onClick={() => navigate('/sign-in')} className={`py-3 text-sm font-semibold cursor-pointer
-                     ${pathMatchRoute("/sign-in") ? "text-black border-b-green-700 border-b-[3px]" : 'text-gray-400'}`}>SignIn</li>
+                    <li onClick={() => navigate('/profile')} className={`py-3 text-sm font-semibold cursor-pointer
+                     ${pathMatchRoute("/sign-in") || pathMatchRoute("/profile") ? "text-black border-b-green-700 border-b-[3px]" : 'text-gray-400'}`}>
+                        {pageState}
+                    </li>
                 </ul>
             </div>
         </header>

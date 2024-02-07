@@ -1,9 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+import Loader from '../components/Loader.jsx';
 
 import { auth, db } from "../firebase.js";
 import {getAuth, updateProfile} from 'firebase/auth'
-import { useNavigate } from 'react-router';
-import { toast } from 'react-toastify';
 import { doc, updateDoc } from 'firebase/firestore';
 
 export default function Profile() {
