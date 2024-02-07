@@ -1,15 +1,18 @@
-import { Bars } from 'react-loader-spinner'
+import { ThreeDots } from 'react-loader-spinner'
 
 export default function Loader() {
   return (
-    <Bars
+    <div className='flex min-h-screen justify-center items-center bg-gray-200'>
+      <ThreeDots
+        visible={true}
         height="80"
         width="80"
         color="#4fa94d"
-        ariaLabel="bars-loading"
+        radius="9"
+        ariaLabel="three-dots-loading"
         wrapperStyle={{}}
         wrapperClass=""
-        visible={true}
-  />
+    />
+    </div>
   )
 }
