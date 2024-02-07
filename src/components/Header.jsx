@@ -2,6 +2,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router"
+import { IoHome } from "react-icons/io5";
 
 export default function Header() {
     const [pageState, setPageState] = useState('Sign In')
@@ -32,9 +33,10 @@ export default function Header() {
     to-white h-20 pt-5 border-b shadow-md sticky top-0 z-50 '>
         <header className='flex justify-between items-center px-3
               max-w-6xl mx-auto'>
-            <div className='h-10 text-2xl font-bold text-green-700 cursor-pointer'
+            <div className='h-10 flex items-end  cursor-pointer'
                  onClick={() => navigate('/')}>
-                Real-State
+                <IoHome className=" mr-2 text-4xl text-red-600 "/>
+                <div className="text-2xl font-bold text-green-700 ">Real-State</div>
             </div>
             <div>
                 <ul className='flex space-x-10 '>
