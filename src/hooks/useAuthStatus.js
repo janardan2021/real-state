@@ -6,15 +6,24 @@ export default function useAuthStatus() {
     const [loggedIn, setLoggedIn] = useState(false)
     const [checkingStatus, setCheckingStatus] = useState(true)
 
-    useEffect(()=> {
-        const auth = getAuth()
-        onAuthStateChanged(auth, (user) => {
-            if(user) {
-                setLoggedIn(true)
+    const auth = getAuth()
+    onAuthStateChanged(auth, (user) => {
+        if(user) {
+            setLoggedIn(true)
+            
+        }
+        setCheckingStatus(false)
+    })
+
+    // useEffect(()=> {
+    //     const auth = getAuth()
+    //     onAuthStateChanged(auth, (user) => {
+    //         if(user) {
+    //             setLoggedIn(true)
                
-            }
-            setCheckingStatus(false)
-        })
-    }, [])
+    //         }
+    //         setCheckingStatus(false)
+    //     })
+    // }, [])
   return {loggedIn, checkingStatus}
 }
