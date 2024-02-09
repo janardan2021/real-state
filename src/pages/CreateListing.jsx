@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 export default function CreateListing() {
+  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
     const [formData, setFormData] = useState({
         type: 'rent',
         name: '',
@@ -12,11 +13,13 @@ export default function CreateListing() {
         description: '',
         offer:true,
         regularPrice: 10,
-        discountedPrice: 10
+        discountedPrice: 10,
+        latitude: 0,
+        longitude: 0
     })
 
     const {type, name, bedrooms, bathrooms, parking, furnished, address,
-    description, offer, regularPrice, discountedPrice} = formData
+    description, offer, regularPrice, discountedPrice, latitude, longitude} = formData
 
     // console.log(formData)
     function onChange(e) {
@@ -44,14 +47,19 @@ export default function CreateListing() {
     // console.log(formData)
     // console.log(formData.type)
     }
-    console.log(formData)
+    // console.log(formData)
+    function onSubmit(e) {
+      e.preventDefault()
+
+      
+    }
   return (
     <div className='max-w-md px-2 mx-auto '>
       <h2 className='text-3xl text-center mt-6 font-bold'>
         Create a listing
      </h2>
 
-     <form>
+     <form onSubmit={onSubmit}>
         <p className='text-lg mt-6 font-semibold'>
          Rent / Sell
         </p>
@@ -145,13 +153,33 @@ export default function CreateListing() {
                className='w-full px-4 py-2 text-xl text-gray-700 border mb-6
                border-gray-300 rounded transition duration-150 ease-in-out
                focus:text-gray-700 focus:bg-white focus:outline-green-700'/>
+         {!geolocationEnabled && (
+          <div className='flex space-x-6 mb-6'>
+            <div>
+              <p className='text-lg font-semibold'>Latitude</p>
+              <input type='number' id='latitude' value={latitude} onChange={onChange}
+                      required min='-90' max='90'
+                      className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
+                      rounded transition duration-150 ease-in-out focus:text-gray-700
+                      focus:bg-white focus:outline-green-700'/>
+            </div>
+            <div>
+              <p className='text-lg font-semibold'>Longitude</p>
+              <input type='number' id='longitude' value={longitude} onChange={onChange}
+                      required min='-180' max='180' 
+                      className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
+                      rounded transition duration-150 ease-in-out focus:text-gray-700
+                      focus:bg-white focus:outline-green-700'/>
+            </div>
+          </div>
+        )}
         <p className='text-lg font-semibold'>Description</p>
         <textarea type='text' id='description' value={description} 
-               onChange={onChange} placeholder='Address' 
+               onChange={onChange} placeholder='Description' 
                className='w-full px-4 py-2 text-xl text-gray-700 border mb-6
                border-gray-300 rounded transition duration-150 ease-in-out
                focus:text-gray-700 focus:bg-white focus:outline-green-700'/>
-
+       
          <p className='text-lg font-semibold'>Offer</p>
         <div className='flex mb-6'>
             <button type='button' id='offer' value='true'
