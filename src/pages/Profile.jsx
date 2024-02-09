@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import Loader from '../components/Loader.jsx';
+import { IoHome } from "react-icons/io5";
 
 import { auth, db } from "../firebase.js";
 import {getAuth, updateProfile} from 'firebase/auth'
 import { doc, updateDoc } from 'firebase/firestore';
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
   const navigate = useNavigate()
@@ -57,6 +58,7 @@ export default function Profile() {
       <div className='max-w-6xl mx-auto flex justify-center items-center flex-col'>
         <h1 className='text-3xl text-center mt-6 font-bold'>Profile</h1>
         <div className='w-full md:w-[50%] mt-6 px-3'>
+
           <form>
             <input type='text'
                    id='name'
@@ -92,6 +94,17 @@ export default function Profile() {
                         duration-200 cursor-pointer'>Sign out</p>
             </div>
           </form>
+
+          <button type='submit' 
+                  className='w-full bg-green-600 text-white uppercase text-sm
+                     font-medium px-7 py-3 rounded shadow-md hover:bg-green-700
+                     transition duration-150 ease-in-out hover:shadow-lg active:bg-green-800'>
+         <Link to='/create-listing'
+               className='flex justify-center items-center'>
+            <IoHome className='text-3xl mr-2 bg-white rounded-full text-red-500 p-1 border-2'/>
+            Rent or sell
+         </Link>
+          </button>
         </div>
       </div>
     </div>

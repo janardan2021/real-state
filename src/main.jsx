@@ -12,22 +12,23 @@ import {
 
 } from "react-router-dom";
 
+import PrivateRoute from './components/PrivateRoute.jsx';
 import Home from "./pages/Home.jsx";
 import Offers from "./pages/Offers.jsx";
 import Profile from "./pages/Profile.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
-
-import PrivateRoute from './components/PrivateRoute.jsx';
+import CreateListing from './pages/CreateListing.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index={true} element={<Home />} />
       <Route path='home' element={<Home />} />
-      <Route path='profile' element={<PrivateRoute />}>
-         <Route path="/profile" element={<Profile />} />
+      <Route path='' element={<PrivateRoute />}>
+         <Route path='profile' element={<Profile />} />
+         <Route path="create-listing" element={<CreateListing />} />
       </Route>
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
