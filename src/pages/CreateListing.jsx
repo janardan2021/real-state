@@ -11,16 +11,40 @@ export default function CreateListing() {
         address:'',
         description: '',
         offer:true,
-        regularPrice:0,
-        discountedPrice: 0
+        regularPrice: 10,
+        discountedPrice: 10
     })
 
     const {type, name, bedrooms, bathrooms, parking, furnished, address,
     description, offer, regularPrice, discountedPrice} = formData
 
-    function onChange() {
-
+    // console.log(formData)
+    function onChange(e) {
+      // console.log(formData)
+    let boolean = null
+    if(e.target.value === 'true'){
+      boolean = true
     }
+    if(e.target.value === 'false'){
+      boolean = false
+    }
+    if(e.target.files){
+      setFormData((prev) => ({
+        ...prev,
+        images: e.target.files
+      }))
+    }
+    
+    if(!e.target.files){
+      setFormData((prev) => ({
+        ...prev,
+        [e.target.id]: boolean ?? e.target.value
+      }))
+    }
+    // console.log(formData)
+    // console.log(formData.type)
+    }
+    console.log(formData)
   return (
     <div className='max-w-md px-2 mx-auto '>
       <h2 className='text-3xl text-center mt-6 font-bold'>
@@ -65,7 +89,7 @@ export default function CreateListing() {
                              focus:bg-white focus:outline-green-700'/>
           </div>
           <div>
-          <p className='text-lg font-semibold'>Beds</p>
+          <p className='text-lg font-semibold'>Baths</p>
             <input type='number' id='bathrooms' value={bathrooms} 
                    onChange={onChange} min='1' max='50' required
                    className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
@@ -77,7 +101,7 @@ export default function CreateListing() {
          Parking
         </p>
         <div className='flex'>
-            <button type='button' id='parking' value={true}
+            <button type='button' id='parking' value='true'
                     onClick={onChange}
                     className={`px-7 py-3 font-medium text-sm uppercase shadow-md
                        rounded hover:shadow-lg focus:shadow-lg active:shadow-lg
@@ -85,7 +109,7 @@ export default function CreateListing() {
                        ${ !parking ? 'bg-white text-black' : 'bg-green-500 text-white'}`}>
                 Yes
             </button>
-            <button type='button' id='parking' value={false}
+            <button type='button' id='parking' value='false'
                     onClick={onChange}
                     className={`px-7 py-3 font-medium text-sm uppercase shadow-md
                        rounded hover:shadow-lg focus:shadow-lg active:shadow-lg
@@ -98,7 +122,7 @@ export default function CreateListing() {
          Furnished
         </p>
         <div className='flex'>
-            <button type='button' id='furnished' value={true}
+            <button type='button' id='furnished' value='true'
                     onClick={onChange}
                     className={`px-7 py-3 font-medium text-sm uppercase shadow-md
                        rounded hover:shadow-lg focus:shadow-lg active:shadow-lg
@@ -106,7 +130,7 @@ export default function CreateListing() {
                        ${!furnished ? 'bg-white text-black' : 'bg-green-500 text-white'}`}>
                 Yes
             </button>
-            <button type='button' id='furnished' value={false}
+            <button type='button' id='furnished' value='false'
                     onClick={onChange}
                     className={`px-7 py-3 font-medium text-sm uppercase shadow-md
                        rounded hover:shadow-lg focus:shadow-lg active:shadow-lg
@@ -130,7 +154,7 @@ export default function CreateListing() {
 
          <p className='text-lg font-semibold'>Offer</p>
         <div className='flex mb-6'>
-            <button type='button' id='offer' value={true}
+            <button type='button' id='offer' value='true'
                     onClick={onChange}
                     className={`px-7 py-3 font-medium text-sm uppercase shadow-md
                        rounded hover:shadow-lg focus:shadow-lg active:shadow-lg
@@ -138,7 +162,7 @@ export default function CreateListing() {
                        ${!offer ? 'bg-white text-black' : 'bg-green-500 text-white'}`}>
                 Yes
             </button>
-            <button type='button' id='offer' value={false}
+            <button type='button' id='offer' value='false'
                     onClick={onChange}
                     className={`px-7 py-3 font-medium text-sm uppercase shadow-md
                        rounded hover:shadow-lg focus:shadow-lg active:shadow-lg
@@ -153,7 +177,7 @@ export default function CreateListing() {
           <p className='text-lg font-semibold'>Regular price</p>
            <div className='flex w-full justify-center space-x-6'>
            <input type='number' id='regularPrice' value={regularPrice} 
-                   onChange={onChange} min='10' max='4000000000' required
+                   onChange={onChange} min='1' max='4000000000' required
                    className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
                              rounded transition duration-150 ease-in-out focus:text-gray-700
                              focus:bg-white focus:outline-green-700'/>
@@ -171,8 +195,8 @@ export default function CreateListing() {
           <div>
           <p className='text-lg font-semibold'>Discounted price</p>
            <div className='flex w-full justify-center space-x-6'>
-           <input type='number' id='regularPrice' value={discountedPrice} 
-                   onChange={onChange} min='10' max='4000000000' required={offer}
+           <input type='number' id='discountedPrice' value={discountedPrice} 
+                   onChange={onChange} min='1' max='4000000000' required={offer}
                    className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
                              rounded transition duration-150 ease-in-out focus:text-gray-700
                              focus:bg-white focus:outline-green-700'/>
