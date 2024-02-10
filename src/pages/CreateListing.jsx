@@ -1,7 +1,18 @@
 import React, { useState } from 'react'
+import Loader from '../components/Loader'
+import {toast} from 'react-toastify'
+import {v4 as uuidv4} from 'uuid'
+
+import {storage} from '../firebase.js'
+import { ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
+import { auth , db} from '../firebase.js'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { useNavigate } from 'react-router'
 
 export default function CreateListing() {
-  const [geolocationEnabled, setGeolocationEnabled] = useState(true)
+  const navigate = useNavigate()
+  const [geolocationEnabled, setGeolocationEnabled] = useState(false)
+  const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         type: 'rent',
         name: '',
@@ -14,11 +25,12 @@ export default function CreateListing() {
         offer:true,
         regularPrice: 10,
         discountedPrice: 10,
+        images: {},
         latitude: 0,
         longitude: 0
     })
 
-    const {type, name, bedrooms, bathrooms, parking, furnished, address,
+    const {type, name, bedrooms, bathrooms, parking, furnished, address, images,
     description, offer, regularPrice, discountedPrice, latitude, longitude} = formData
 
     // console.log(formData)
@@ -48,11 +60,90 @@ export default function CreateListing() {
     // console.log(formData.type)
     }
     // console.log(formData)
-    function onSubmit(e) {
+    async function onSubmit(e) {
       e.preventDefault()
-
+      setLoading(true)
       
+      if(+discountedPrice >= +regularPrice) {
+        setLoading(false)
+        toast.error('Discounted price should be less than regular price!')
+        return
+      }
+      
+      if(images.length > 6) {
+        setLoading(false)
+        toast.error('Maximum 6 images allowed')
+        return
+      }
+    
+    const geolocation = {lat: latitude, lng:longitude}
+
+    async function storeImage(image){
+         return new Promise((resolve, reject) => {
+              const filename = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
+              const storageRef = ref(storage, filename);
+              const uploadTask = uploadBytesResumable(storageRef, image);
+              uploadTask.on('state_changed', 
+                      (snapshot) => {
+                        // Observe state change events such as progress, pause, and resume
+                        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload is ' + progress + '% done');
+                        switch (snapshot.state) {
+                          case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                          case 'running':
+                            console.log('Upload is running');
+                            break;
+                        }
+                      }, 
+                      (error) => {
+                        reject(error)
+                      }, 
+                      () => {
+                        // Handle successful uploads on complete
+                        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                          resolve(downloadURL);
+                        });
+                      }
+                    );
+         })
     }
+
+    const imgUrls = await Promise.all(
+      [...images].map((image) => storeImage(image)))
+                       .catch((error) => {
+                        setLoading(false)
+                        toast.error('Images not uploaded')
+                        return
+                       }
+    )
+
+    // console.log(imgUrls)
+      
+    const formDataCopy = {
+      ...formData,
+      imgUrls,
+      geolocation,
+      user_id: auth.currentUser.uid,
+      timestamp: serverTimestamp()
+    }
+    delete formDataCopy.images;
+    delete formDataCopy.latitude;
+    delete formDataCopy.longitude;
+    !formDataCopy.offer && delete formDataCopy.discountedPrice
+
+    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
+    setLoading(false)
+    toast.success('Listing added to the database')
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+    }
+
+   
+    
+  if(loading) return (<Loader />)
   return (
     <div className='max-w-md px-2 mx-auto '>
       <h2 className='text-3xl text-center mt-6 font-bold'>
