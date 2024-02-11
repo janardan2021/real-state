@@ -20,6 +20,8 @@ import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import CreateListing from './pages/CreateListing.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import Listings from './pages/Listings.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,8 +29,13 @@ const router = createBrowserRouter(
       <Route index={true} element={<Home />} />
       <Route path='home' element={<Home />} />
       <Route path='' element={<PrivateRoute />}>
-         <Route path='profile' element={<Profile />} />
-         <Route path="create-listing" element={<CreateListing />} />
+            <Route path='profile' element={<Dashboard />} > 
+               <Route index  element={<Profile />} />
+               <Route path='listings' element={<Listings />} />
+               <Route path="create-listing" element={<CreateListing />} />
+             </Route>
+         {/* <Route path='profile' element={<Profile />} /> */}
+         
       </Route>
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />

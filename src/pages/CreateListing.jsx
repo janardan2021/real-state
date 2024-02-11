@@ -127,7 +127,7 @@ export default function CreateListing() {
       ...formData,
       imgUrls,
       geolocation,
-      user_id: auth.currentUser.uid,
+      userRef: auth.currentUser.uid,
       timestamp: serverTimestamp()
     }
     delete formDataCopy.images;
@@ -145,13 +145,10 @@ export default function CreateListing() {
     
   if(loading) return (<Loader />)
   return (
-    <div className='max-w-md px-2 mx-auto '>
-      <h2 className='text-3xl text-center mt-6 font-bold'>
-        Create a listing
-     </h2>
+    <div className='mt-10 w-full items-center flex flex-col'>
 
-     <form onSubmit={onSubmit}>
-        <p className='text-lg mt-6 font-semibold'>
+     <form onSubmit={onSubmit} className='w-full md:w-[80%] px-3'>
+        <p className='text-lg font-semibold'>
          Rent / Sell
         </p>
         <div className='flex'>
