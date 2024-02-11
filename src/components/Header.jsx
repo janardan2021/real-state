@@ -1,8 +1,10 @@
-import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth"
+import { auth } from "../firebase";
 
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router"
 import { IoHome } from "react-icons/io5";
+import { MdLogout } from "react-icons/md";
 
 export default function Header() {
     const [pageState, setPageState] = useState('Sign In')
@@ -18,6 +20,11 @@ export default function Header() {
         }
     }
 
+    function logout() {
+        auth.signOut()
+        navigate('/sign-in')
+    }
+
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if(user) {
@@ -27,6 +34,7 @@ export default function Header() {
             }
         })
     } ,[auth, onAuthStateChanged])
+    console.log(auth.currentUser)
    
   return (
     <div className='bg-gradient-to-b from-gray-500
@@ -48,6 +56,12 @@ export default function Header() {
                      ${pathMatchRoute("/sign-in") || pathMatchRoute("/profile") ? "text-white border-b-green-500 border-b-[3px]" : 'text-gray-300'}`}>
                         {pageState}
                     </li>
+                    {auth.currentUser && 
+                    <li onClick={logout} className='py-3 text-sm font-semibold cursor-pointer text-white uppercase
+                                                    flex'>
+                      <p>Logout</p>
+                      <MdLogout className="text-xl ml-1 text-green-600 "/>
+                    </li>}
                 </ul>
             </div>
         </header>

@@ -36,8 +36,8 @@ return (
     <div className='mt-10 w-full items-center flex flex-col'>
 
      {listings !== null && listings.length > 0 && (
-          <div className='w-full md:w-[70%] px-3'>
-            <ul>
+          <div className='w-full md:w-[70%] lg:w-[90%] px-3'>
+            <ul className="sm:grid sm:grid-cols-2 xl:grid-cols-3 mb-6 gap-3">
               {listings.map((listing) => (
                 <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
               ))}
