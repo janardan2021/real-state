@@ -22,6 +22,7 @@ import ForgotPassword from "./pages/ForgotPassword.jsx";
 import CreateListing from './pages/CreateListing.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Listings from './pages/Listings.jsx';
+import EditListing from './pages/EditListing.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
                <Route index  element={<Profile />} />
                <Route path='listings' element={<Listings />} />
                <Route path="create-listing" element={<CreateListing />} />
+               <Route path='edit-listing/:id' element={<EditListing />}/>
              </Route>
          {/* <Route path='profile' element={<Profile />} /> */}
          

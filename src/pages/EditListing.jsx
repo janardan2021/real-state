@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Loader from '../components/Loader'
 import {toast} from 'react-toastify'
 import {v4 as uuidv4} from 'uuid'
@@ -6,13 +6,15 @@ import {v4 as uuidv4} from 'uuid'
 import {storage} from '../firebase.js'
 import { ref, uploadBytesResumable, getDownloadURL  } from "firebase/storage";
 import { auth , db} from '../firebase.js'
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
-import { useNavigate } from 'react-router'
+import { addDoc, collection, serverTimestamp, doc, getDoc, updateDoc} from 'firebase/firestore'
+import { useNavigate, useParams } from 'react-router'
 
-export default function CreateListing() {
+export default function EditListing() {
+  const [notAuthorized, setNotAuthorized] = useState(false)
   const navigate = useNavigate()
   const [geolocationEnabled, setGeolocationEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [listing, setListing] = useState(null)
   const [formData, setFormData] = useState({
         type: 'rent',
         name: '',
@@ -29,6 +31,45 @@ export default function CreateListing() {
         latitude: 0,
         longitude: 0
     })
+    // console.log(formData) 
+  const params = useParams()
+  
+
+
+    useEffect(()=>{
+        // console.log(formData)
+        setLoading(true)
+        async function fetchListing(){
+            const docRef = doc(db, "listings", params.id);
+            const docSnap = await getDoc(docRef); 
+            if(docSnap.exists()) {
+                   if(docSnap.data().userRef === auth.currentUser.uid){
+                    console.log(docSnap.data())
+                    setListing(docSnap.data())
+                    setFormData({...docSnap.data(),
+                                latitude:docSnap.data().geolocation.lat,
+                                longitude:docSnap.data().geolocation.lng})
+                    setLoading(false)
+                  
+                   }else{
+                    setNotAuthorized(true)
+                   }
+            }else {
+                navigate('/')
+                toast.error('Listing does not exist')
+            }
+        }
+        fetchListing()
+        
+    },[auth.currentUser.uid])
+
+    useEffect(()=>{
+        if(notAuthorized){
+            toast.error('User not authorized')
+            navigate('/')
+            
+          }
+      },[notAuthorized])
 
     const {type, name, bedrooms, bathrooms, parking, furnished, address, images,
     description, offer, regularPrice, discountedPrice, latitude, longitude} = formData
@@ -134,12 +175,12 @@ export default function CreateListing() {
     delete formDataCopy.latitude;
     delete formDataCopy.longitude;
     !formDataCopy.offer && delete formDataCopy.discountedPrice
-
-    const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
+    const docRef = doc(db, 'listings', params.id)
+    const updatedDoc = await updateDoc(docRef, formDataCopy)
     setLoading(false)
-    toast.success('Listing added to the database')
+    toast.success('Listing updated')
     navigate('/profile/listings')
-    // navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+    // navigate(`/category/${formDataCopy.type}/${updatedDoc.id}`)
     }
 
    
@@ -147,7 +188,7 @@ export default function CreateListing() {
   if(loading) return (<Loader />)
   return (
     <div className='mt-10 w-full items-center flex flex-col'>
-
+        <h1 className='text-2xl text-center font-bold'>Edit listing</h1>
      <form onSubmit={onSubmit} className='w-full md:w-[80%] px-3'>
         <p className='text-lg font-semibold'>
          Rent / Sell
@@ -343,7 +384,7 @@ export default function CreateListing() {
                       font-medium text-sm uppercase shadow-md hover:bg-blue-700
                       hover:shadow-lg focus:bg-blue-700 focus:shadow-lg
                       active:bg-blue-800 active:shadow-lg transition
-                      duration-150 ease-in-out'>Create Listing</button>
+                      duration-150 ease-in-out'>Update Listing</button>
      </form>
     </div>
   )
