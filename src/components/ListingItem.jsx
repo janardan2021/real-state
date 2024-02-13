@@ -13,7 +13,7 @@ export default function ListingItem({listing, id, onEdit, onDelete}) {
     <li className='relative flex flex-col justify-between shadow-md hover:shadow-xl rounded-md
                   overflow-hidden transition-shadow duration-150'>
       <Link className='contents' to={`/category/${listing.type}/${id}`}>
-        <img src={listing.imgUrls[0]} alt='' loading='lazy'
+        <img src={listing.imgUrls[0].downloadURL} alt='' loading='lazy'
              className='h-[170px] w-full object-cover hover:scale-105 transition-scale
                         duration-200 ease-in'/>
         

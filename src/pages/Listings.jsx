@@ -1,6 +1,7 @@
-import { auth, db } from "../firebase.js";
+import { auth, db, storage } from "../firebase.js";
 import {getAuth, updateProfile} from 'firebase/auth'
-import { collection, doc, updateDoc, where, query, getDocs, orderBy, deleteDoc } from 'firebase/firestore';
+import { collection, doc, updateDoc, where, query, getDocs, orderBy, deleteDoc, getDoc } from 'firebase/firestore';
+import {ref, deleteObject } from "firebase/storage";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader.jsx";
 import ListingItem from "../components/ListingItem.jsx";
@@ -41,6 +42,23 @@ export default function Listings() {
 
   async function onDelete(id){
       if(window.confirm('Are you sure to delete the listing?')){
+        const docRef = doc(db, "listings", id);
+        const docSnap = await getDoc(docRef);
+        const imageNames = docSnap.data().imgUrls.map(urls => urls.filename)
+        // console.log(imageNames)
+        // Create a reference to the file to delete
+       imageNames.forEach((imageName) => {
+        const desertRef = ref(storage, imageName);
+        // console.log(imageName)
+        // Delete the file
+        deleteObject(desertRef).then(() => {
+          // console.log('File deleted')
+        }).catch((error) => {
+          toast.error('something went wrong!!')
+          return
+        });
+       })
+        // console.log("Document data:", docSnap.data().imgUrls);
         await deleteDoc(doc(db, 'listings', id))
         const updatedListings = listings.filter((listing) => listing.id !== id)
         setListings(updatedListings)
