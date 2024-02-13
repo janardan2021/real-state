@@ -34,7 +34,7 @@ export default function Header() {
             }
         })
     } ,[auth, onAuthStateChanged])
-    console.log(auth.currentUser)
+    // console.log(auth.currentUser)
    
   return (
     <div className='bg-gradient-to-b from-gray-500
@@ -44,21 +44,21 @@ export default function Header() {
             <div className='h-10 flex items-end  cursor-pointer'
                  onClick={() => navigate('/')}>
                 <IoHome className=" mr-2 text-4xl text-red-600 "/>
-                <div className="text-2xl font-bold text-green-500 ">Real-State</div>
+                <div className="text-lg md:text-2xl font-bold text-green-500">Real-State</div>
             </div>
             <div>
                 <ul className='flex space-x-10 '>
-                    <li onClick={() => navigate('/')} className={`py-3 text-sm font-semibold cursor-pointer
+                    <li onClick={() => navigate('/')} className={`py-3 text-sm font-semibold cursor-pointer hover:scale-x-110 transition duration-150
                      ${pathMatchRoute("/") ? "text-white border-b-green-500 border-b-[3px]" : 'text-gray-300' }`}>Home</li>
-                    <li onClick={() => navigate('/offers')} className={`py-3 text-sm font-semibold cursor-pointer
+                    <li onClick={() => navigate('/offers')} className={`py-3 text-sm font-semibold cursor-pointer hover:scale-x-110 transition duration-150
                      ${pathMatchRoute("/offers") ? "text-white border-b-green-500 border-b-[3px]" : 'text-gray-300'}`}>Offers</li>
-                    <li onClick={() => navigate('/profile')} className={`py-3 text-sm font-semibold cursor-pointer
+                    <li onClick={() => navigate('/profile')} className={`py-3 text-sm font-semibold cursor-pointer hover:scale-x-110 transition duration-150
                      ${pathMatchRoute("/sign-in") || pathMatchRoute("/profile") ? "text-white border-b-green-500 border-b-[3px]" : 'text-gray-300'}`}>
                         {pageState}
                     </li>
                     {auth.currentUser && 
                     <li onClick={logout} className='py-3 text-sm font-semibold cursor-pointer text-white uppercase
-                                                    flex'>
+                                                    flex hover:scale-x-110 transition duration-150'>
                       <p>Logout</p>
                       <MdLogout className="text-xl ml-1 text-green-600 "/>
                     </li>}

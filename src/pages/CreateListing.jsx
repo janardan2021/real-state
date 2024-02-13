@@ -23,8 +23,8 @@ export default function CreateListing() {
         address:'',
         description: '',
         offer:true,
-        regularPrice: 10,
-        discountedPrice: 10,
+        regularPrice: 0,
+        discountedPrice: 0,
         images: {},
         latitude: 0,
         longitude: 0
@@ -64,7 +64,7 @@ export default function CreateListing() {
       e.preventDefault()
       setLoading(true)
       
-      if(+discountedPrice >= +regularPrice) {
+      if(offer && +discountedPrice >= +regularPrice) {
         setLoading(false)
         toast.error('Discounted price should be less than regular price!')
         return
@@ -138,7 +138,8 @@ export default function CreateListing() {
     const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
     setLoading(false)
     toast.success('Listing added to the database')
-    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+    navigate('/profile/listings')
+    // navigate(`/category/${formDataCopy.type}/${docRef.id}`)
     }
 
    
