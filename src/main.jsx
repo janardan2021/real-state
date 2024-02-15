@@ -23,6 +23,7 @@ import CreateListing from './pages/CreateListing.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import Listings from './pages/Listings.jsx';
 import EditListing from './pages/EditListing.jsx';
+import Listing from './pages/Listing.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,6 +40,7 @@ const router = createBrowserRouter(
          {/* <Route path='profile' element={<Profile />} /> */}
          
       </Route>
+      <Route path='/category/:type/:id' element={<Listing />}/>
       <Route path="sign-in" element={<SignIn />} />
       <Route path="sign-up" element={<SignUp />} />
       <Route path="offers" element={<Offers />} />
