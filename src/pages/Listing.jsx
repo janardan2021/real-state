@@ -3,6 +3,7 @@ import { db } from "../firebase"
 import { useParams } from "react-router"
 import { doc, getDoc } from "firebase/firestore"
 import Loader from "../components/Loader"
+import {toast} from 'react-toastify'
 
 import { register } from 'swiper/element/bundle';
 
@@ -24,7 +25,7 @@ export default function Listing() {
     }, [params.id])
 
     register();
-
+console.log(window.location)
   if (loading) return <Loader />
   return (
    <div>
@@ -56,9 +57,16 @@ export default function Listing() {
             </swiper-slide>
         ))}
       </swiper-container>
-
-     
+        
     </div>
+    <div className="bg-green-500 w-fit mx-auto rounded-md text-white cursor-pointer
+                    my-2 py-2 px-4 hover:bg-green-700 transition ease-in-out"
+                    onClick={() => {
+                      navigator.clipboard.writeText(window.location.href)
+                      toast.success('Link copied to clipboard!')
+                    }}>
+        share
+    </div>  
    </div>
   )
 }
