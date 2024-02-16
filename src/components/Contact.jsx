@@ -23,7 +23,7 @@ export default function Contact({userRef, listing}) {
   return (
     <div className="">
         {owner && (
-            <div className="flex flex-col w-full my-4 items-center">
+            <div className="flex flex-col w-full my-4">
                 <p className="my-2 text-lg">Contact {owner.name} for {listing.name} living.</p>
                 <textarea name="message" id="message" rows='3' value={message}
                           onChange={(e) => setMessage(e.target.value)}
@@ -33,7 +33,7 @@ export default function Contact({userRef, listing}) {
                           ?Subject=${listing.name}
                           &body=${message}`}
                           className="flex w-full mx-auto">
-                    <button className="my-4 mx-auto px-5 py-3 text-white font-medium bg-green-500 
+                    <button className="my-4 px-5 py-3 text-white font-medium bg-green-500 
                            text-sm uppercase shadow-md hover:bg-green-700 
                            hover:shadow-lg rounded w-4/5 transition ease-in-out">
                       Send message

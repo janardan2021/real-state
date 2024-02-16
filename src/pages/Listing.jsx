@@ -12,6 +12,7 @@ import { FaChair } from "react-icons/fa6";
 
 import { register } from 'swiper/element/bundle';
 import Contact from "../components/Contact"
+import MapLeaflet from "../components/MapLeaflet"
 
 export default function Listing() {
     const [listing, setListing] = useState(null)
@@ -25,7 +26,7 @@ export default function Listing() {
          if(docSnap.exists()){
             setListing(() => docSnap.data())
             setLoading(false)
-            // console.log(docSnap.data())
+            console.log(docSnap.data())
          }
        }
        fetchListing()
@@ -36,6 +37,7 @@ export default function Listing() {
   if (loading) return <Loader />
   return (
    <div>
+
      <div className="min-w-[400px] max-w-[800px] py-3 px-4 mx-auto bg-green-100
                     rounded-xl shadow-lg shadow-green-500">
       <swiper-container slides-per-view="2"
@@ -66,6 +68,7 @@ export default function Listing() {
       </swiper-container>
         
     </div>
+
     <div className="bg-green-500 w-fit mx-auto rounded-md text-white cursor-pointer
                     my-4 py-2 px-4 hover:bg-green-700 transition ease-in-out"
                     onClick={() => {
@@ -74,8 +77,10 @@ export default function Listing() {
                     }}>
         share
     </div>  
-    <div>
-      <div className="w-full h-20">
+
+    <div className="w-full flex flex-col-reverse md:flex-row md:justify-center ">
+
+      <div className="w-5/6 mx-auto md:w-3/6 h-20">
         <p className="text-2xl font-bold my-4 px-2"
            >{listing.name} - ${listing.offer ? listing.discountedPrice
                                                       .toString()
@@ -120,7 +125,7 @@ export default function Listing() {
 
         {listing.userRef !== auth.currentUser?.uid && !contactOwner && (
           <div className="flex ">
-          <button className="my-4 mx-auto px-5 py-3 text-white font-medium bg-green-500 
+          <button className="my-4 px-5 py-3 text-white font-medium bg-green-500 
                            text-sm uppercase shadow-md hover:bg-green-700 
                            hover:shadow-lg rounded w-4/5 transition ease-in-out"
                            onClick={() => setContactOwner(true)}>
@@ -135,7 +140,11 @@ export default function Listing() {
           </div> 
         )}
       </div>
-      <div className="w-full h-20"></div>
+
+      <div className="w-5/6 mx-auto md:w-2/6">
+         <MapLeaflet lat={listing.geolocation.lat} lng={listing.geolocation.lng} address={listing.address}/>
+      </div>
+
     </div>
    </div>
   )
