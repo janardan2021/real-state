@@ -18,17 +18,20 @@ const Dashboard = () => {
         <div className='flex w-full mt-10 flex-row  lg:flex-col lg:items-center lg:w-2/6 lg:h-96'>
             <div className='w-2/6 lg:w-full pl-20 lg:pl-40  lg:h-2/6 text-lg md:text-xl'>
               <button onClick={() => navigate('/profile')}  className={`font-semibold cursor-pointer border-b-[3px]
-                       ${pathMatchRoute("/profile") ? "text-black border-b-green-700 " : 'border-b-gray-300'}`}
+                       ${pathMatchRoute("/profile") ? "text-black border-b-green-700 " : 'border-b-gray-300'}
+                       hover:scale-x-105 transition ease-in-out`}
                        >Profile</button> 
             </div>
             <div className='w-2/6 lg:w-full pl-20 lg:pl-40  lg:h-2/6 text-lg md:text-xl'>
               <button onClick={() => navigate('/profile/listings')}  className={`font-semibold cursor-pointer border-b-[3px]
-                       ${pathMatchRoute("/profile/listings") ? "text-black border-b-green-700 " : 'border-b-gray-300'}`}
+                       ${pathMatchRoute("/profile/listings") ? "text-black border-b-green-700 " : 'border-b-gray-300'}
+                       hover:scale-x-105 transition ease-in-out`}
                        >Listings</button>
             </div>
             <div className='w-2/6 lg:w-full pl-20 lg:pl-40  lg:h-2/6 text-lg md:text-xl'>
             <button onClick={() => navigate('/profile/create-listing')} className={`flex font-semibold cursor-pointer border-b-[3px]
-                       ${pathMatchRoute("/profile/create-listing") ? "text-black border-b-green-700 " : 'border-b-gray-300'}`}>
+                       ${pathMatchRoute("/profile/create-listing") ? "text-black border-b-green-700 " : 'border-b-gray-300'}
+                       hover:scale-x-105 transition ease-in-out`}>
               
               <div >New listing</div>
               <div>

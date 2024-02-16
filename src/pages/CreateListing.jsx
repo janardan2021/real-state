@@ -134,6 +134,7 @@ export default function CreateListing() {
     delete formDataCopy.latitude;
     delete formDataCopy.longitude;
     !formDataCopy.offer && delete formDataCopy.discountedPrice
+    console.log(formDataCopy)
 
     const docRef = await addDoc(collection(db, 'listings'), formDataCopy)
     setLoading(false)
@@ -176,8 +177,37 @@ export default function CreateListing() {
                className='w-full px-4 py-2 text-xl text-gray-700 border mb-6
                border-gray-300 rounded transition duration-150 ease-in-out
                focus:text-gray-700 focus:bg-white focus:outline-green-700'/>
+
+       <p className='text-lg mt-6 font-semibold'>Address</p>
+        <textarea type='text' id='address' value={address} 
+               onChange={onChange} placeholder='Address' 
+               className='w-full px-4 py-2 text-xl text-gray-700 border mb-6
+               border-gray-300 rounded transition duration-150 ease-in-out
+               focus:text-gray-700 focus:bg-white focus:outline-green-700'/>
+
+        {!geolocationEnabled && (
+          <div className='flex space-x-6 mb-6'>
+            <div className='w-1/2'>
+              <p className='text-lg font-semibold'>Latitude</p>
+              <input type='number' id='latitude' value={latitude} onChange={onChange}
+                      required min='-90' max='90'
+                      className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
+                      rounded transition duration-150 ease-in-out focus:text-gray-700
+                      focus:bg-white focus:outline-green-700'/>
+            </div>
+            <div className='w-1/2'>
+              <p className='text-lg font-semibold'>Longitude</p>
+              <input type='number' id='longitude' value={longitude} onChange={onChange}
+                      required min='-180' max='180' 
+                      className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
+                      rounded transition duration-150 ease-in-out focus:text-gray-700
+                      focus:bg-white focus:outline-green-700'/>
+            </div>
+          </div>
+        )}
+
         <div className='flex space-x-6 mb-6'>
-          <div>
+          <div className='w-1/2'>
             <p className='text-lg font-semibold'>Beds</p>
             <input type='number' id='bedrooms' value={bedrooms} 
                    onChange={onChange} min='1' max='50' required
@@ -185,7 +215,7 @@ export default function CreateListing() {
                              rounded transition duration-150 ease-in-out focus:text-gray-700
                              focus:bg-white focus:outline-green-700'/>
           </div>
-          <div>
+          <div className='w-1/2'>
           <p className='text-lg font-semibold'>Baths</p>
             <input type='number' id='bathrooms' value={bathrooms} 
                    onChange={onChange} min='1' max='50' required
@@ -236,38 +266,8 @@ export default function CreateListing() {
                 No
             </button>
         </div>
-        <p className='text-lg mt-6 font-semibold'>Address</p>
-        <textarea type='text' id='address' value={address} 
-               onChange={onChange} placeholder='Address' 
-               className='w-full px-4 py-2 text-xl text-gray-700 border mb-6
-               border-gray-300 rounded transition duration-150 ease-in-out
-               focus:text-gray-700 focus:bg-white focus:outline-green-700'/>
-         {!geolocationEnabled && (
-          <div className='flex space-x-6 mb-6'>
-            <div>
-              <p className='text-lg font-semibold'>Latitude</p>
-              <input type='number' id='latitude' value={latitude} onChange={onChange}
-                      required min='-90' max='90'
-                      className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
-                      rounded transition duration-150 ease-in-out focus:text-gray-700
-                      focus:bg-white focus:outline-green-700'/>
-            </div>
-            <div>
-              <p className='text-lg font-semibold'>Longitude</p>
-              <input type='number' id='longitude' value={longitude} onChange={onChange}
-                      required min='-180' max='180' 
-                      className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
-                      rounded transition duration-150 ease-in-out focus:text-gray-700
-                      focus:bg-white focus:outline-green-700'/>
-            </div>
-          </div>
-        )}
-        <p className='text-lg font-semibold'>Description</p>
-        <textarea type='text' id='description' value={description} 
-               onChange={onChange} placeholder='Description' 
-               className='w-full px-4 py-2 text-xl text-gray-700 border mb-6
-               border-gray-300 rounded transition duration-150 ease-in-out
-               focus:text-gray-700 focus:bg-white focus:outline-green-700'/>
+       
+       
        
          <p className='text-lg font-semibold'>Offer</p>
         <div className='flex mb-6'>
@@ -290,7 +290,7 @@ export default function CreateListing() {
         </div>
 
         <div className='flex items-center mb-6'>
-          <div>
+          <div className='w-1/2'>
           <p className='text-lg font-semibold'>Regular price</p>
            <div className='flex w-full justify-center space-x-6'>
            <input type='number' id='regularPrice' value={regularPrice} 
@@ -305,27 +305,38 @@ export default function CreateListing() {
            )}
            </div>
           </div>
-        </div>
 
-        {offer && (
-          <div className='flex items-center mb-6'>
+          {offer && (
+          <div className='w-1/2' >
+        <div>
+        <p className='text-lg font-semibold'>Discounted price</p>
+          <div className='flex w-full justify-center space-x-6'>
+          <input type='number' id='discountedPrice' value={discountedPrice} 
+                  onChange={onChange} min='1' max='4000000000' required={offer}
+                  className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
+                            rounded transition duration-150 ease-in-out focus:text-gray-700
+                            focus:bg-white focus:outline-green-700'/>
+          {type === 'rent' && (
           <div>
-          <p className='text-lg font-semibold'>Discounted price</p>
-           <div className='flex w-full justify-center space-x-6'>
-           <input type='number' id='discountedPrice' value={discountedPrice} 
-                   onChange={onChange} min='1' max='4000000000' required={offer}
-                   className='w-full px-4 py-2 text-xl text-gray-700 border border-gray-700
-                             rounded transition duration-150 ease-in-out focus:text-gray-700
-                             focus:bg-white focus:outline-green-700'/>
-           {type === 'rent' && (
-            <div>
-              <p>$ / Month</p>
-            </div>
-           )}
-           </div>
+            <p>$ / Month</p>
+          </div>
+          )}
           </div>
         </div>
-        )}
+          </div>
+          )}
+
+        </div>
+
+       
+
+    <p className='text-lg font-semibold'>Description</p>
+        <textarea type='text' id='description' value={description} 
+               onChange={onChange} placeholder='Description' 
+               className='w-full px-4 py-2 text-xl text-gray-700 border mb-6
+               border-gray-300 rounded transition duration-150 ease-in-out
+               focus:text-gray-700 focus:bg-white focus:outline-green-700'/>
+
 
     <div className='mb-6'>
       <p className='text-lg font-semibold'>Images</p>

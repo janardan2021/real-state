@@ -26,7 +26,7 @@ export default function Listing() {
          if(docSnap.exists()){
             setListing(() => docSnap.data())
             setLoading(false)
-            console.log(docSnap.data())
+            // console.log(docSnap.data())
          }
        }
        fetchListing()
@@ -112,15 +112,16 @@ export default function Listing() {
             {listing.description}
         </p>
 
-        <div className="flex w-full space-x-4 my-4 px-2">
+        <div className="flex flex-wrap w-full justify-between my-4 px-2">
+          
           <div className="font-semibold text-lg flex items-center w-fit">
+            <FaChair className="mr-1"/>{listing.furnished ? "Furnished" : "Not furnished"}</div>
+            <div className="font-semibold text-lg flex items-center w-fit">
             <LuBedSingle className="mr-1"/> {+listing.bedrooms} Beds</div>
           <div className="font-semibold text-lg flex items-center w-fit">
             <LiaBathSolid className="mr-1"/>{+listing.bathrooms} Baths</div>
-          <div className="font-semibold text-lg flex items-center w-fit">
-            <MdLocalParking className="mr-1"/>{listing.parking ? "Yes" : "No"}</div>
-          <div className="font-semibold text-lg flex items-center w-fit">
-            <FaChair className="mr-1"/>{listing.furnished ? "Furnished" : "Not furnished"}</div>
+            <div className="font-semibold text-lg flex items-center w-fit">
+            <MdLocalParking className="mr-1"/>{listing.parking ? "Available" : "Street parking"}</div>
         </div>
 
         {listing.userRef !== auth.currentUser?.uid && !contactOwner && (

@@ -10,8 +10,8 @@ export default function ListingItem({listing, id, onEdit, onDelete}) {
     // console.log(result)
    
   return (
-    <li className='relative flex flex-col justify-between shadow-md shadow-green-200 hover:shadow-xl rounded-md
-                  overflow-hidden hover:shadow-green-500 transition-shadow duration-150'>
+    <li className='relative flex flex-col justify-between shadow-md shadow-gray-200 hover:shadow-xl rounded-md
+                  overflow-hidden hover:shadow-gray-500 transition-shadow duration-150'>
       <Link className='contents' to={`/category/${listing.type}/${id}`}>
         <img src={listing.imgUrls[0].downloadURL} alt='' loading='lazy'
              className='h-[170px] w-full object-cover hover:scale-105 transition-scale
