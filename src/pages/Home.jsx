@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Loader from '../components/Loader.jsx'
 import ListingItem from "../components/ListingItem.jsx"
 import {db} from '../firebase.js'
-import { collection, query, where, orderBy, limit, getDocs } from "firebase/firestore"
+import { collection, query, where, orderBy, limit, getDocs, startAfter } from "firebase/firestore"
 
 
 export default function Home() {
@@ -10,6 +10,9 @@ export default function Home() {
   const [showOffer, setShowOffer] = useState(false)
   const [showRent, setShowRent] = useState(false)
   const [showSale, setShowSale] = useState(false)
+
+  const [lastAllListing, setLastAllListing] = useState(null)
+  // console.log(lastAllListing)
 
   function allListingsClicked() {
     setShowAll(() => true)
@@ -36,14 +39,15 @@ export default function Home() {
     setShowSale(() => false)
   }
 
-
-  const [allListings , setAllListings] = useState(null)
+ const [allListings , setAllListings] = useState(null)
+  // console.log(allListings)
   useEffect(()=>{
     async function getAllListings(){
       try {
         const listingsRef = collection(db, 'listings')
-        const q = query(listingsRef, orderBy('timestamp', 'desc'))
+        const q = query(listingsRef, orderBy('timestamp', 'desc'), limit(6))
         const querySnap = await getDocs(q)
+        // console.log(querySnap)
         const listings = []
         querySnap.forEach((doc) => {
           return listings.push({
@@ -52,6 +56,8 @@ export default function Home() {
           })
         })
         setAllListings(listings)
+        const lastListing = querySnap.docs[querySnap.docs.length - 1]
+        setLastAllListing(lastListing)
         // console.log(listings)
       } catch (error) {
         console.log(error)
@@ -59,6 +65,30 @@ export default function Home() {
     }
     getAllListings()
   },[])
+  // For load more feature of all listings section
+  async function loadMore() {
+    try {
+      const listingsRef = collection(db, 'listings')
+      const q = query(listingsRef, orderBy('timestamp', 'desc') , limit(3), startAfter(lastAllListing))
+      const querySnap = await getDocs(q)
+      // console.log(querySnap)
+      const listings = []
+      querySnap.forEach((doc) => {
+        return listings.push({
+          id: doc.id,
+          data: doc.data()
+        })
+      })
+      setAllListings((prev) =>[...prev, ...listings] )
+      const lastListing = querySnap.docs[querySnap.docs.length - 1]
+      // console.log(lastAllListing)
+      setLastAllListing(lastListing)
+      // console.log(listings)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   // Listing of sales
   const [saleListings , setSaleListings] = useState(null)
   useEffect(()=>{
@@ -66,7 +96,7 @@ export default function Home() {
       try {
         const listingsRef = collection(db, 'listings')
         const q = query(listingsRef, where('type', '==', 'sale'), 
-                         orderBy('timestamp', 'desc'), limit(4))
+                         orderBy('timestamp', 'desc'), limit(6))
         const querySnap = await getDocs(q)
         const listings = []
         querySnap.forEach((doc) => {
@@ -83,6 +113,7 @@ export default function Home() {
     }
     getSaleListings()
   },[])
+
   // Listings of Offers
   const [offerListings , setOfferListings] = useState(null)
   useEffect(()=>{
@@ -90,7 +121,7 @@ export default function Home() {
       try {
         const listingsRef = collection(db, 'listings')
         const q = query(listingsRef, where('offer', '==', true), 
-                         orderBy('timestamp', 'desc'), limit(4))
+                         orderBy('timestamp', 'desc'), limit(6))
         const querySnap = await getDocs(q)
         const listings = []
         querySnap.forEach((doc) => {
@@ -115,7 +146,7 @@ export default function Home() {
       try {
         const listingsRef = collection(db, 'listings')
         const q = query(listingsRef, where('type', '==', 'rent'), 
-                         orderBy('timestamp', 'desc'), limit(4))
+                         orderBy('timestamp', 'desc'), limit(6))
         const querySnap = await getDocs(q)
         const listings = []
         querySnap.forEach((doc) => {
@@ -132,6 +163,7 @@ export default function Home() {
     }
     getRentListings()
   },[])
+
   return (
     <div className="flex flex-col md:flex-row"> 
      <div className="flex w-full justify-start md:w-1/5 md:flex-col md:space-y-10 my-6">
@@ -157,24 +189,30 @@ export default function Home() {
                           ' border-gray-200'}`}>Rent</button>
      </div>
 
-     <div className="flex w-full md:w-4/5 my-6 px-6">
+     <div className="flex flex-col justify-center w-full md:w-4/5 my-6 px-6">
+
      {showAll && (
-      <div>
+      <div className="flex flex-col justify-center">
       {!allListings ? <Loader /> : (
-        <div className="grid grid-cols-3 gap-6 ">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 ">
           {allListings.map((listing) => (
           <ListingItem key={listing.id} id={listing.id} 
                        listing={listing.data}/>
         ))}
         </div>
       )}
-    </div>
+      {lastAllListing && (
+        <button onClick={loadMore}
+                className="my-6 w-fit mx-auto bg-green-500 hover:bg-green-700 rounded-md
+                           text-white font-semibold py-2 px-6">Load more</button>
+      )}
+      </div>
      )}
 
      {showOffer && (
        <div>
        {!offerListings ? <Loader /> : (
-         <div className="grid grid-cols-3 gap-6 ">
+         <div className="grid grid-cols-2 md:grid-cols-3 gap-6 ">
            {offerListings.map((listing) => (
            <ListingItem key={listing.id} id={listing.id} 
                         listing={listing.data}/>
@@ -187,7 +225,7 @@ export default function Home() {
       {showRent && (
         <div>
         {!rentListings ? <Loader /> : (
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {rentListings.map((listing) => (
             <ListingItem key={listing.id} id={listing.id} 
                          listing={listing.data}/>
@@ -200,7 +238,7 @@ export default function Home() {
      {showSale && (
        <div>
        {!saleListings ? <Loader /> : (
-         <div className="grid grid-cols-3 gap-6">
+         <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
            {saleListings.map((listing) => (
            <ListingItem key={listing.id} id={listing.id} 
                         listing={listing.data}/>
@@ -209,8 +247,11 @@ export default function Home() {
        )}
      </div>
      )}
+
+     
       
      </div>
+
 
     </div>
   )
